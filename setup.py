@@ -44,8 +44,10 @@ def install_requirements(python_exe):
 
 def initialize_database(python_exe):
     """Initialize the database"""
-    script_dir = os.path.dirname(__file__)
-    return run_command(f'"{python_exe}" -c "import sys; sys.path.insert(0, \\"{script_dir}\\"); from kanban_agent import ensure_setup; ensure_setup(); print(\\"Database initialized successfully\\")"', "Initializing database")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Use forward slashes and raw string to avoid Windows path issues
+    script_dir = script_dir.replace('\\', '/')
+    return run_command(f'"{python_exe}" -c "import sys; sys.path.insert(0, r\'{script_dir}\'); from kanban_agent import ensure_setup; ensure_setup(); print(\'Database initialized successfully\')"', "Initializing database")
 
 def main():
     print("🚀 KanbanLite Setup")

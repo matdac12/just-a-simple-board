@@ -15,6 +15,18 @@ A lightweight, portable Kanban board that you can drop into any project for loca
 
 ## 🚀 Quick Start
 
+### 0. Get KanbanLite
+
+First, clone or download this repository:
+
+```bash
+# Clone the repository
+git clone https://github.com/matdac12/just-a-simple-board.git
+cd kanbanlite
+
+# Or download and extract the ZIP file, then navigate to the folder
+```
+
 ### 1. Setup (One-time)
 
 The setup process will:
