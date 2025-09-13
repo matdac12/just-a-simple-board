@@ -23,9 +23,18 @@ def check_location():
     """Check if we're in the right location"""
     script_dir, parent_dir, template_path, parent_claude = get_paths()
 
-    if os.path.basename(script_dir) != 'kanbanlite':
-        print("⚠️  Warning: This script should be run from within the kanbanlite folder")
+    # Check if we have the required files (this indicates we're in a KanbanLite folder)
+    required_files = ['kanban_agent.py', 'app.py', 'CLAUDE_PARENT_TEMPLATE.md']
+    missing_files = []
+
+    for file in required_files:
+        if not os.path.exists(os.path.join(script_dir, file)):
+            missing_files.append(file)
+
+    if missing_files:
+        print("⚠️  Error: This doesn't appear to be a KanbanLite folder")
         print(f"Current location: {script_dir}")
+        print(f"Missing required files: {', '.join(missing_files)}")
         return False
 
     if not os.path.exists(template_path):
