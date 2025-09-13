@@ -1,0 +1,100 @@
+<!doctype html><html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title or "Kanban" }}</title>
+  <style>
+    body{font-family: system-ui, sans-serif;margin:0;padding:1rem;background:#f6f6f7}
+    .board{display:flex;gap:12px;align-items:flex-start;overflow-x:auto}
+    .col{background:#fff;border:1px solid #ddd;border-radius:8px;min-width:280px;padding:0;box-shadow:0 1px 3px rgba(0,0,0,0.1);transition:all 0.2s ease}
+    .col:hover{box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+    
+    .col-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 8px;border-bottom:1px solid #f0f0f0}
+    .col h3{margin:0;font-size:14px;font-weight:600;color:#333}
+    .card-count{font-size:12px;font-weight:400;color:#666;margin-left:8px}
+    
+    .add-btn{
+      background:#f8f9fa;border:1px solid #e9ecef;border-radius:6px;
+      width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:all 0.2s ease;font-size:16px;font-weight:600;color:#666;
+    }
+    .add-btn:hover{background:#e9ecef;color:#333;transform:scale(1.05)}
+    .add-btn:active{transform:scale(0.95)}
+    
+    .card{
+      background:#fafafa;border:1px solid #e9ecef;border-radius:8px;
+      padding:12px;margin:8px 12px;cursor:grab;position:relative;
+      transition:all 0.2s ease;
+    }
+    .card:hover{
+      background:#fff;border-color:#ddd;box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      transform:translateY(-1px);
+    }
+    .card:active{transform:translateY(0)}
+    
+    .card.editing{
+      box-shadow:0 0 0 2px #007bff20;border-color:#007bff;
+    }
+    
+    .subcards{margin-left:8px;border-left:2px dashed #ddd;padding-left:8px}
+    .muted{color:#666;font-size:12px}
+    .row{display:flex;gap:6px;align-items:center}
+    input,textarea{width:100%;border:1px solid #ddd;border-radius:4px;padding:6px 8px}
+    input:focus,textarea:focus{outline:none;border-color:#007bff;box-shadow:0 0 0 2px #007bff20}
+    .drop{min-height:60px;padding:4px}
+    .drop:empty::after{
+      content:"Drop cards here";color:#999;font-size:12px;
+      display:block;text-align:center;padding:20px;font-style:italic;
+    }
+    
+    .badge{font-size:12px;padding:3px 8px;border-radius:12px;border:none;font-weight:500;background:#f7fafc;color:#4a5568}
+    .badge.due-overdue{background:#fee;color:#c53030}
+    .badge.due-today{background:#fef5e7;color:#d69e2e}
+    .badge.due-soon{background:#f0fff4;color:#38a169}
+    
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .card-notes{margin-bottom:8px}
+    
+    .checklist-summary{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
+    .checklist-progress{color:#666;font-weight:500;min-width:30px}
+    .checklist-bar{flex:1;height:4px;background:#e9ecef;border-radius:2px;overflow:hidden}
+    .checklist-fill{height:100%;background:#28a745;border-radius:2px;transition:width 0.3s ease}
+    
+    .card-actions{position:absolute;top:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity 0.2s ease}
+    .card:hover .card-actions{opacity:1;display:flex}
+    .quick-action{
+      background:#fff;border:1px solid #dc3545;color:#dc3545;border-radius:4px;
+      width:20px;height:20px;font-size:14px;font-weight:bold;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;
+    }
+    .quick-action:hover{background:#dc3545;color:#fff}
+    .quick-move{font-size:11px;padding:2px 4px;border:1px solid #ddd;border-radius:4px}
+    
+    .checklist-details{margin-top:8px}
+    .checklist-details summary{font-size:12px;color:#666;cursor:pointer;padding:2px 0}
+    .checklist{margin:4px 0;padding:0;list-style:none}
+    .checklist li{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:12px}
+    .check-btn{
+      background:none;border:none;font-size:14px;cursor:pointer;
+      color:#666;transition:color 0.2s ease;padding:0;
+    }
+    .check-btn:hover{color:#28a745}
+    .checklist-text{flex:1}
+    .checklist-text.done{text-decoration:line-through;color:#999}
+    
+    .add-checklist{display:flex;gap:4px;margin-top:4px}
+    .add-checklist input{font-size:11px;padding:4px 6px;flex:1}
+    .add-checklist button{
+      background:#f8f9fa;border:1px solid #ddd;border-radius:4px;
+      padding:4px 8px;font-size:12px;cursor:pointer;
+    }
+    .add-checklist-first{margin-top:8px}
+    .add-checklist-first input{font-size:11px;padding:4px 6px;color:#999;border:1px dashed #ddd}
+  </style>
+  <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+  <script defer src="/static/dnd.js"></script>
+</head>
+<body>
+  {% block content %}{% endblock %}
+</body>
+</html>

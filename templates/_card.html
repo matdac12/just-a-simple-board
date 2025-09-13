@@ -1,0 +1,66 @@
+<div class="card" draggable="true" ondragstart="dragCard(event)" data-card="{{ card.id }}">
+  <div class="card-header">
+    <strong>{{ card.title }}</strong>
+    {% if card.due_at %}
+      <span class="badge">Due {{ card.due_at.strftime('%m/%d') }}</span>
+    {% endif %}
+  </div>
+  
+  {% if card.notes %}<div class="muted card-notes">{{ card.notes }}</div>{% endif %}
+  
+  {% set total_items = card.checklist|length if card.checklist else 0 %}
+  {% set done_items = card.checklist|selectattr("done")|list|length if card.checklist else 0 %}
+  
+  {% if total_items > 0 %}
+    <div class="checklist-summary">
+      <span class="checklist-progress">{{ done_items }}/{{ total_items }}</span>
+      <div class="checklist-bar">
+        <div class="checklist-fill" style="width: {{ (done_items/total_items*100)|round }}%"></div>
+      </div>
+    </div>
+  {% endif %}
+  
+  <div class="card-actions" style="display: none;">
+    <button class="quick-action" onclick="quickDelete({{ card.id }})" title="Delete">×</button>
+    <select class="quick-move" onchange="quickMove({{ card.id }}, this.value)" title="Move to...">
+      <option value="">Move to...</option>
+      <option value="1" {{ 'selected' if card.column_id == 1 else '' }}>Todo</option>
+      <option value="2" {{ 'selected' if card.column_id == 2 else '' }}>Doing</option>
+      <option value="3" {{ 'selected' if card.column_id == 3 else '' }}>Done</option>
+    </select>
+  </div>
+
+  {% if (card.checklist or []) %}
+    <details class="checklist-details">
+      <summary>Checklist ({{ done_items }}/{{ total_items }})</summary>
+      <ul class="checklist">
+        {% for it in card.checklist %}
+          <li class="{{ 'checked' if it.done else '' }}">
+            <form hx-post="/toggle/{{ it.id }}" hx-swap="outerHTML" style="display:inline">
+              <button type="submit" class="check-btn">{{ "☑" if it.done else "☐" }}</button>
+            </form>
+            <span class="checklist-text {{ 'done' if it.done else '' }}">{{ it.text }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      
+      <form hx-post="/checklist/{{ card.id }}" hx-target=".checklist" hx-swap="beforeend" class="add-checklist">
+        <input name="text" placeholder="Add checklist item..." autocomplete="off"/>
+        <button type="submit">+</button>
+      </form>
+    </details>
+  {% else %}
+    <form hx-post="/checklist/{{ card.id }}" hx-target="closest .card" hx-swap="outerHTML" class="add-checklist-first" style="margin-top: 8px;">
+      <input name="text" placeholder="+ Add checklist item" autocomplete="off"/>
+    </form>
+  {% endif %}
+
+  {% if (card.children or []) %}
+    <div class="subcards">
+      {% for child in card.children %}
+        {% set card = child %}
+        {% include "_card.html" %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row" style="margin-bottom:10px">
+  <h2 style="margin:0">{{ board.name }}</h2>
+  <a class="badge" href="/seed">Seed demo</a>
+</div>
+
+<div class="board">
+  {% for col in board.columns %}
+  <div class="col" data-col="{{ col.id }}" ondrop="dropCard(event)" ondragover="event.preventDefault()">
+    <div class="col-header">
+      <h3>{{ col.name }} <span class="card-count">({{ col.cards|length }})</span></h3>
+      <button class="add-btn" onclick="addCard({{ col.id }})" title="Add new card">+</button>
+    </div>
+
+    <div class="drop" id="col-{{ col.id }}">
+      {% for card in col.cards %}
+        {% include "_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source:*)",
+      "Bash(python:*)",
+      "Bash(.venv_kanban/Scripts/python.exe:*)",
+      "Bash(.venv_kanban/Scripts/python:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(echo:*)",
+      "Read(//mnt/wsl/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

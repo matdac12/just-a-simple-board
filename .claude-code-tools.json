@@ -1,0 +1,88 @@
+{
+  "name": "KanbanLite Tool Configuration",
+  "description": "Auto-approved tools and commands for Claude Code in this repository",
+  "auto_approved_tools": {
+    "Bash": {
+      "patterns": [
+        ".venv_kanban/Scripts/python.exe *",
+        ".venv_kanban/Scripts/python *",
+        ".venv_kanban/Scripts/python.exe kanban_agent.py *",
+        ".venv_kanban/bin/python *",
+        ".venv_kanban/bin/python kanban_agent.py *",
+        "python kanban_agent.py *",
+        "python setup.py",
+        "python start.py",
+        "ls *",
+        "pwd",
+        "cat *",
+        "ps *",
+        "grep -E *",
+        "find . -name *",
+        "rm test_*.py",
+        "rm *.pyc",
+        "rm -rf __pycache__",
+        "pip list",
+        "pip show *",
+        "echo *",
+        "sleep *",
+        "kill *",
+        "pkill *"
+      ],
+      "description": "Basic commands for development, debugging, and kanban management"
+    },
+    "BashOutput": {
+      "all": true,
+      "description": "Always allowed to check output of background processes"
+    },
+    "Read": {
+      "patterns": [
+        "**/*.py",
+        "**/*.html",
+        "**/*.js",
+        "**/*.css",
+        "**/*.md",
+        "**/*.txt",
+        "**/*.json",
+        "**/*.yml",
+        "**/*.yaml",
+        ".env*",
+        "requirements.txt"
+      ],
+      "description": "Read any project file"
+    },
+    "Grep": {
+      "all": true,
+      "description": "Search through codebase"
+    },
+    "Glob": {
+      "all": true,
+      "description": "Find files by pattern"
+    },
+    "KillBash": {
+      "all": true,
+      "description": "Kill any background process"
+    }
+  },
+  "proactive_actions": [
+    "Use kanban_agent.py to add/manage tasks",
+    "Check server logs when errors are mentioned",
+    "Run diagnostic scripts to identify issues",
+    "Fix template errors immediately",
+    "Fix SQLAlchemy relationship errors immediately",
+    "Restart server after fixing errors",
+    "Create temporary test files for debugging",
+    "Clean up temporary files after debugging",
+    "Monitor all background processes"
+  ],
+  "project_specific": {
+    "python_executable": ".venv_kanban/Scripts/python.exe",
+    "venv_name": ".venv_kanban",
+    "main_app": "app.py",
+    "kanban_agent": "kanban_agent.py",
+    "database_location": "../.kanban/app.db",
+    "setup_script": "setup.py",
+    "start_script": "start.py",
+    "server_port": 8000,
+    "server_host": "127.0.0.1"
+  }
+}
