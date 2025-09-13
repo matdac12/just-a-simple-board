@@ -17,6 +17,11 @@ A lightweight, portable Kanban board that you can drop into any project for loca
 
 ### 1. Setup (One-time)
 
+The setup process will:
+- ✅ Create a virtual environment (`.venv_kanban`)
+- ✅ Install Python dependencies
+- ✅ Initialize the database
+
 Choose your preferred method:
 
 **Cross-platform (Recommended):**
@@ -31,6 +36,30 @@ setup.bat
 
 # Linux/Mac
 ./setup.sh
+```
+
+> **Note**: This creates a `.venv_kanban` folder containing all dependencies. You can safely ignore this folder - it's automatically managed.
+
+#### Manual Setup (Optional) If you don't want to use the authomatic one.
+
+If you prefer to set up the virtual environment manually:
+
+```bash
+# Create virtual environment
+python -m venv .venv_kanban
+
+# Activate virtual environment
+# Windows:
+.venv_kanban\Scripts\activate
+
+# Linux/Mac:
+source .venv_kanban/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Initialize database
+python -c "from kanban_agent import ensure_setup; ensure_setup()"
 ```
 
 ### 2. Start the Server
