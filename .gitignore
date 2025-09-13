@@ -86,3 +86,7 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+
+# Claude Code Integration
+# Note: CLAUDE_PARENT_TEMPLATE.md and integrate_claude.py are intentionally included
+# These files help users set up Claude integration in their parent projects

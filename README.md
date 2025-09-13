@@ -163,6 +163,53 @@ Just ask Claude:
 
 Claude will use the `kanban_agent.py` script to manage your tasks directly!
 
+## 🔗 Enabling Claude Code Integration in Your Project
+
+When you copy KanbanLite to your project, Claude Code needs to know about the available tools. Here are three ways to enable integration:
+
+### Option 1: Quick Setup (Recommended)
+
+Use the automated integration script:
+
+```bash
+# From inside the kanbanlite folder
+python integrate_claude.py
+```
+
+This will:
+- ✅ Create or update CLAUDE.md in your project root
+- ✅ Add KanbanLite command documentation
+- ✅ Enable Claude to find and use the kanban tools
+
+### Option 2: Manual Copy
+
+Copy the template to your project root:
+
+```bash
+# From your project root (where you placed kanbanlite)
+cp kanbanlite/CLAUDE_PARENT_TEMPLATE.md CLAUDE.md
+```
+
+### Option 3: Add to Existing CLAUDE.md
+
+If you already have a CLAUDE.md, add these lines:
+
+```markdown
+## Kanban Task Management
+Claude can manage tasks in the kanbanlite folder:
+- `cd kanbanlite && python kanban_agent.py add "Task" "notes" "todo"`
+- `cd kanbanlite && python kanban_agent.py list`
+- `cd kanbanlite && python start.py` (to start web server)
+
+See kanbanlite/README.md for all available commands.
+```
+
+### Option 4: Just Tell Claude
+
+Simply tell Claude: *"Use the kanban tools in the kanbanlite folder to manage my tasks"*
+
+Claude will automatically discover and use the tools!
+
 ## 📁 Project Structure
 
 ```
@@ -183,7 +230,9 @@ kanbanlite/
 │
 ├── 🤖 Automation
 │   ├── kanban_agent.py   # CLI & Claude integration
+│   ├── integrate_claude.py  # Claude integration setup
 │   ├── CLAUDE.md         # Claude Code instructions
+│   ├── CLAUDE_PARENT_TEMPLATE.md  # Template for parent projects
 │   └── .claude-code-tools.json  # Auto-approved commands
 │
 ├── 🎨 Frontend
