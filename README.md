@@ -1,101 +1,46 @@
 # KanbanLite 🚀
 
+NO ADS NO INTERNET NO NOTHING
+
+JUST STRAIGHT AND SIMPLE
+
+GETTING WORK DONE
+
 A lightweight, portable Kanban board that you can drop into any project for local task management. Perfect for personal productivity and project organization, with full privacy and offline functionality.
 
-## ✨ Features
+GOAL: Make CC or Codex or AnythingElse manage a kanban board. 
 
-- **📱 Modern Web Interface**: Clean, responsive HTMX-powered UI
-- **🔄 Drag & Drop**: Move tasks between Todo/Doing/Done columns
-- **✅ Checklists**: Add subtasks with checkable items
-- **📅 Due Dates**: Set and track task deadlines
-- **🤖 AI Integration**: Built-in support for Claude Code automation
-- **📁 Portable**: Single folder you can copy to any project
-- **🔒 Private**: All data stays local on your machine
-- **🌐 Cross-Platform**: Works on Windows, Mac, and Linux
 
 ## 🚀 Quick Start
 
-### 0. Get KanbanLite
-
-First, clone or download this repository:
-
+Find a way to have the just-a-simple-board folder inside you project (clone or or download and unzip)
 ```bash
-# Clone the repository
 git clone https://github.com/matdac12/just-a-simple-board.git
-cd kanbanlite
-
-# Or download and extract the ZIP file, then navigate to the folder
 ```
 
-### 1. Setup (One-time)
-
-The setup process will:
-- ✅ Create a virtual environment (`.venv_kanban`)
-- ✅ Install Python dependencies
-- ✅ Initialize the database
-
-Choose your preferred method:
-
-**Cross-platform (Recommended):**
+Then, just one time
 ```bash
+cd just-a-simple-board
 python setup.py
+python integrate_claude.py
 ```
 
-**Platform-specific:**
-```bash
-# Windows
-setup.bat
+Great. Now start the server:
 
-# Linux/Mac
-./setup.sh
-```
-
-> **Note**: This creates a `.venv_kanban` folder containing all dependencies. You can safely ignore this folder - it's automatically managed.
-
-#### Manual Setup (Optional) If you don't want to use the authomatic one.
-
-If you prefer to set up the virtual environment manually:
-
-```bash
-# Create virtual environment
-python -m venv .venv_kanban
-
-# Activate virtual environment
-# Windows:
-.venv_kanban\Scripts\activate
-
-# Linux/Mac:
-source .venv_kanban/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Initialize database
-python -c "from kanban_agent import ensure_setup; ensure_setup()"
-```
-
-### 2. Start the Server
-
-**Cross-platform:**
 ```bash
 python start.py
 ```
 
-**Platform-specific:**
-```bash
-# Windows
-start_kanban.bat
-# or double-click start_kanban.bat
-
-# Linux/Mac
-./start.sh
-```
-
-### 3. Open Your Dashboard
+Open Your Dashboard
 
 Navigate to: **http://127.0.0.1:8000**
 
-That's it! Start managing your tasks! 🎉
+That's it! 
+
+You can manage the board from the terminal, but just tell Claude code to do star for you.
+
+
+Below is a full guide on how to work manually, but you know what's up and only use cloud code or codex.
 
 ## 📋 Usage
 
@@ -165,14 +110,16 @@ Claude will use the `kanban_agent.py` script to manage your tasks directly!
 
 ## 🔗 Enabling Claude Code Integration in Your Project
 
-When you copy KanbanLite to your project, Claude Code needs to know about the available tools. Here are three ways to enable integration:
+If the step at the beginning didn't work, try these other options. 
+
+When you copy KanbanLite to your project, Claude Code needs to know about the available tools. Here are four ways to enable integration:
 
 ### Option 1: Quick Setup (Recommended)
 
 Use the automated integration script:
 
 ```bash
-# From inside the kanbanlite folder
+# From inside the KanbanLite folder (just-a-simple-board)
 python integrate_claude.py
 ```
 
@@ -183,11 +130,14 @@ This will:
 
 ### Option 2: Manual Copy
 
-Copy the template to your project root:
+Copy the template to your project's parent directory:
 
 ```bash
-# From your project root (where you placed kanbanlite)
-cp kanbanlite/CLAUDE_PARENT_TEMPLATE.md CLAUDE.md
+# Windows (from inside the KanbanLite folder)
+copy CLAUDE_PARENT_TEMPLATE.md ..\CLAUDE.md
+
+# Linux/Mac (from inside the KanbanLite folder)
+cp CLAUDE_PARENT_TEMPLATE.md ../CLAUDE.md
 ```
 
 ### Option 3: Add to Existing CLAUDE.md
@@ -196,17 +146,17 @@ If you already have a CLAUDE.md, add these lines:
 
 ```markdown
 ## Kanban Task Management
-Claude can manage tasks in the kanbanlite folder:
-- `cd kanbanlite && python kanban_agent.py add "Task" "notes" "todo"`
-- `cd kanbanlite && python kanban_agent.py list`
-- `cd kanbanlite && python start.py` (to start web server)
+Claude can manage tasks using KanbanLite:
+- `cd just-a-simple-board && python kanban_agent.py add "Task" "notes" "todo"`
+- `cd just-a-simple-board && python kanban_agent.py list`
+- `cd just-a-simple-board && python start.py` (to start web server)
 
-See kanbanlite/README.md for all available commands.
+See just-a-simple-board/README.md for all available commands.
 ```
 
 ### Option 4: Just Tell Claude
 
-Simply tell Claude: *"Use the kanban tools in the kanbanlite folder to manage my tasks"*
+Simply tell Claude: *"Use the kanban tools in this project to manage my tasks"*
 
 Claude will automatically discover and use the tools!
 

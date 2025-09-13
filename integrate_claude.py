@@ -115,6 +115,10 @@ def integrate():
         print("• Ask Claude: 'Show me my current kanban board status'")
         print("• Ask Claude: 'Start the kanban server'")
         print()
+        print("🤖 Optional: Create a specialized KanbanLite Manager agent:")
+        print("• Run: /agent create kanbanlite-manager \"Expert Kanban manager for task organization and workflow optimization\"")
+        print("• Then ask the agent to organize your tasks and optimize your workflow!")
+        print()
         print("📖 For more commands, see: kanbanlite/README.md")
         return True
 

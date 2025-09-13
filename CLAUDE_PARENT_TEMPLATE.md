@@ -59,6 +59,23 @@ Just ask Claude:
 
 Claude will automatically use the kanban_agent.py commands to manage your tasks!
 
+### 🤖 KanbanLite Manager Agent
+
+For even better task management, you can use the specialized KanbanLite Manager agent:
+
+```bash
+# Create the agent in your project
+/agent create kanbanlite-manager "A specialized agent for managing Kanban boards using KanbanLite. Expert at task organization, project management, and Kanban methodology. Knows all kanban_agent.py commands and can suggest workflow improvements."
+```
+
+The KanbanLite Manager agent provides:
+- ✅ **Expert task management** with Kanban best practices
+- 🚀 **Proactive suggestions** for workflow optimization
+- 📊 **Board health monitoring** and WIP limit recommendations
+- 🎯 **Intelligent task organization** and priority management
+
+Just ask the agent: *"Organize my current tasks"* or *"What's the health of my board?"*
+
 ### Database Location
 
 Task data is stored in `.kanban/app.db` in your project root, keeping your kanban data with your project.
