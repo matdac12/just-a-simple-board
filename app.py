@@ -38,9 +38,22 @@ def test():
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request, db: Session = Depends(get_db)):
     try:
+        from datetime import date
         board = ensure_seed(db)
-        for c in board.columns: _ = c.cards
-        return templates.TemplateResponse("board.html", {"request": request, "board": board, "title": "Kanban"})
+
+        # Eagerly load all relationships to avoid N+1 queries
+        for c in board.columns:
+            _ = c.cards  # Load cards
+            for card in c.cards:
+                _ = card.checklist  # Load checklist items
+                _ = card.children   # Load child cards
+
+        return templates.TemplateResponse("board.html", {
+            "request": request,
+            "board": board,
+            "title": "Kanban",
+            "today": date.today()
+        })
     except Exception as e:
         import traceback
         return HTMLResponse(content=f"<pre>Error: {str(e)}\n\n{traceback.format_exc()}</pre>", status_code=500)
@@ -111,10 +124,10 @@ def add_checklist_item(card_id: int, request: Request, text: str = Form(...), db
     item = ChecklistItem(card_id=card_id, text=text, position=pos)
     db.add(item); db.commit(); db.refresh(item)
     return HTMLResponse(f'''
-      <li>
-        <form hx-post="/toggle/{item.id}" hx-swap="outerHTML" style="display:inline">
-          <button type="submit">☐</button>
-        </form> {item.text}
+      <li data-item-id="{item.id}">
+        <button type="button" class="check-btn" onclick="toggleChecklistItem({item.id}, this)">☐</button>
+        <span class="checklist-text">{item.text}</span>
+        <button type="button" class="delete-item-btn" onclick="deleteChecklistItem({item.id}, this)" title="Delete item">×</button>
       </li>''')
 
 @app.post("/toggle/{item_id}", response_class=HTMLResponse)
@@ -124,11 +137,18 @@ def toggle_item(item_id: int, db: Session = Depends(get_db)):
     it.done = not it.done; db.commit()
     box = "☑" if it.done else "☐"
     return HTMLResponse(f'''
-      <li>
-        <form hx-post="/toggle/{it.id}" hx-swap="outerHTML" style="display:inline">
-          <button type="submit">{box}</button>
-        </form> {it.text}
+      <li class="{'checked' if it.done else ''}" data-item-id="{it.id}">
+        <button type="button" class="check-btn" onclick="toggleChecklistItem({it.id}, this)">{box}</button>
+        <span class="checklist-text {'done' if it.done else ''}">{it.text}</span>
+        <button type="button" class="delete-item-btn" onclick="deleteChecklistItem({it.id}, this)" title="Delete item">×</button>
       </li>''')
+
+@app.delete("/checklist-item/{item_id}", response_class=HTMLResponse)
+def delete_checklist_item(item_id: int, db: Session = Depends(get_db)):
+    item = db.get(ChecklistItem, item_id)
+    if not item: return HTMLResponse(status_code=404, content="")
+    db.delete(item); db.commit()
+    return HTMLResponse("")
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True, log_level="debug")

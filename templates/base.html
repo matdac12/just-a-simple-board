@@ -90,6 +90,59 @@
     }
     .add-checklist-first{margin-top:8px}
     .add-checklist-first input{font-size:11px;padding:4px 6px;color:#999;border:1px dashed #ddd}
+
+    /* Enhanced States */
+    .col.drop-highlight{background:#f8fff8;border-color:#28a745}
+    .card.dragging{opacity:0.5;transform:rotate(3deg)}
+    .card.selected{box-shadow:0 0 0 2px #007bff;border-color:#007bff}
+    .card.loading{opacity:0.7;position:relative}
+    .card.loading::after{
+      content:"";position:absolute;top:50%;left:50%;width:16px;height:16px;
+      margin:-8px 0 0 -8px;border:2px solid #f3f3f3;border-top:2px solid #007bff;
+      border-radius:50%;animation:spin 1s linear infinite;
+    }
+
+    /* Edit Actions */
+    .edit-actions{margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .save-btn{background:#28a745;color:#fff;border:none;padding:4px 12px;border-radius:4px;font-size:12px;cursor:pointer}
+    .cancel-btn{background:#6c757d;color:#fff;border:none;padding:4px 12px;border-radius:4px;font-size:12px;cursor:pointer}
+    .edit-hint{font-size:10px;color:#999;font-style:italic}
+    .save-btn:hover{background:#218838}
+    .cancel-btn:hover{background:#5a6268}
+
+    /* Toast Notifications */
+    .toast-container{position:fixed;top:20px;right:20px;z-index:1000}
+    .toast{
+      background:#333;color:#fff;padding:12px 16px;border-radius:6px;margin-bottom:8px;
+      transform:translateX(100%);opacity:0;transition:all 0.3s ease;font-size:14px;min-width:200px;
+    }
+    .toast.toast-show{transform:translateX(0);opacity:1}
+    .toast.toast-success{background:#28a745}
+    .toast.toast-error{background:#dc3545}
+    .toast.toast-info{background:#17a2b8}
+
+    /* Loading Overlay */
+    .loading-overlay{
+      position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);
+      display:flex;align-items:center;justify-content:center;z-index:9999;
+    }
+    .spinner{
+      width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #007bff;
+      border-radius:50%;animation:spin 1s linear infinite;
+    }
+    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+    /* Global Stats */
+    .global-stats{margin-left:auto}
+    .stat{font-size:12px;color:#666;margin-left:12px}
+
+    /* Card improvements */
+    .card-title-input{font-size:14px;margin-bottom:4px;border:1px solid #007bff}
+    .card-notes-input{
+      resize:vertical;min-height:40px;font-family:inherit;line-height:1.4;
+      border:1px solid #ddd;border-radius:4px;padding:6px 8px;
+    }
+    .card-notes-input:focus{border-color:#007bff;box-shadow:0 0 0 2px #007bff20}
   </style>
   <script src="https://unpkg.com/htmx.org@2.0.2"></script>
   <script defer src="/static/dnd.js"></script>

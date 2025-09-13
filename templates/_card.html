@@ -1,12 +1,15 @@
-<div class="card" draggable="true" ondragstart="dragCard(event)" data-card="{{ card.id }}">
+<div class="card" draggable="true" ondragstart="dragCard(event)" ondragend="dragEnd(event)" data-card="{{ card.id }}" onclick="selectCard(this)">
   <div class="card-header">
     <strong>{{ card.title }}</strong>
     {% if card.due_at %}
-      <span class="badge">Due {{ card.due_at.strftime('%m/%d') }}</span>
+      {% set days_diff = (card.due_at.date() - today).days if today else 0 %}
+      <span class="badge {% if days_diff < 0 %}due-overdue{% elif days_diff == 0 %}due-today{% elif days_diff <= 3 %}due-soon{% endif %}">
+        {% if days_diff < 0 %}Overdue{% elif days_diff == 0 %}Due Today{% else %}Due {{ card.due_at.strftime('%m/%d') }}{% endif %}
+      </span>
     {% endif %}
   </div>
-  
-  {% if card.notes %}<div class="muted card-notes">{{ card.notes }}</div>{% endif %}
+
+  {% if card.notes %}<div class="card-notes muted">{{ card.notes }}</div>{% endif %}
   
   {% set total_items = card.checklist|length if card.checklist else 0 %}
   {% set done_items = card.checklist|selectattr("done")|list|length if card.checklist else 0 %}
@@ -31,27 +34,26 @@
   </div>
 
   {% if (card.checklist or []) %}
-    <details class="checklist-details">
+    <details class="checklist-details" open>
       <summary>Checklist ({{ done_items }}/{{ total_items }})</summary>
-      <ul class="checklist">
+      <ul class="checklist" id="checklist-{{ card.id }}">
         {% for it in card.checklist %}
-          <li class="{{ 'checked' if it.done else '' }}">
-            <form hx-post="/toggle/{{ it.id }}" hx-swap="outerHTML" style="display:inline">
-              <button type="submit" class="check-btn">{{ "☑" if it.done else "☐" }}</button>
-            </form>
+          <li class="{{ 'checked' if it.done else '' }}" data-item-id="{{ it.id }}">
+            <button type="button" class="check-btn" onclick="toggleChecklistItem({{ it.id }}, this)">{{ "☑" if it.done else "☐" }}</button>
             <span class="checklist-text {{ 'done' if it.done else '' }}">{{ it.text }}</span>
+            <button type="button" class="delete-item-btn" onclick="deleteChecklistItem({{ it.id }}, this)" title="Delete item">×</button>
           </li>
         {% endfor %}
       </ul>
-      
-      <form hx-post="/checklist/{{ card.id }}" hx-target=".checklist" hx-swap="beforeend" class="add-checklist">
-        <input name="text" placeholder="Add checklist item..." autocomplete="off"/>
+
+      <form class="add-checklist" onsubmit="addChecklistItem(event, {{ card.id }})">
+        <input name="text" placeholder="Add checklist item..." autocomplete="off" onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); this.closest('form').dispatchEvent(new Event('submit')); }"/>
         <button type="submit">+</button>
       </form>
     </details>
   {% else %}
-    <form hx-post="/checklist/{{ card.id }}" hx-target="closest .card" hx-swap="outerHTML" class="add-checklist-first" style="margin-top: 8px;">
-      <input name="text" placeholder="+ Add checklist item" autocomplete="off"/>
+    <form class="add-checklist-first" style="margin-top: 8px;" onsubmit="addChecklistItem(event, {{ card.id }})">
+      <input name="text" placeholder="+ Add checklist item" autocomplete="off" onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); this.closest('form').dispatchEvent(new Event('submit')); }"/>
     </form>
   {% endif %}
 
