@@ -61,45 +61,145 @@ async function dropCard(ev){
 }
 
 // Add Card Function
-async function addCard(columnId) {
+function addCard(columnId) {
+  // Check if form already exists and remove it
+  const existingForm = document.querySelector('.new-card-form');
+  if (existingForm) {
+    existingForm.remove();
+  }
+
+  const column = document.getElementById(`col-${columnId}`);
+  const form = document.createElement('div');
+  form.className = 'new-card-form';
+  form.innerHTML = `
+    <form onsubmit="submitNewCard(event, ${columnId})" class="new-card-form-content">
+      <input type="text" name="title" placeholder="Add title" class="new-card-title" required autocomplete="off">
+      <textarea name="notes" placeholder="Description (optional)" class="new-card-notes" rows="3"></textarea>
+      <div class="new-card-checklist">
+        <input type="text" placeholder="Add checklist item" class="new-checklist-input" onkeydown="if(event.key==='Enter') addNewChecklistItem(event, this)">
+        <ul class="new-checklist-items"></ul>
+      </div>
+      <div class="new-card-actions">
+        <button type="submit" class="save-btn">Add Card</button>
+        <button type="button" class="cancel-btn" onclick="cancelNewCard()">Cancel</button>
+      </div>
+    </form>
+  `;
+
+  column.appendChild(form);
+
+  // Focus on title input
+  const titleInput = form.querySelector('.new-card-title');
+  titleInput.focus();
+
+  // Add escape key handler
+  const escapeHandler = (e) => {
+    if (e.key === 'Escape') {
+      cancelNewCard();
+      document.removeEventListener('keydown', escapeHandler);
+    }
+  };
+  document.addEventListener('keydown', escapeHandler);
+}
+
+async function submitNewCard(event, columnId) {
+  event.preventDefault();
+  const form = event.target;
+  const formData = new FormData(form);
+  formData.set('column_id', columnId);
+
   try {
     const response = await fetch('/cards', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `column_id=${columnId}&title=New Card&notes=`
+      body: formData
     });
-    
+
     if (response.ok) {
-      const cardHtml = await response.text();
-      const dropZone = document.getElementById(`col-${columnId}`);
-      
+      const html = await response.text();
+      const column = document.getElementById(`col-${columnId}`);
+
+      // Get checklist items before removing form
+      const checklistItems = [];
+      const formElement = document.querySelector('.new-card-form');
+      const items = formElement.querySelectorAll('.new-checklist-item .checklist-text');
+      items.forEach(item => {
+        checklistItems.push(item.textContent);
+      });
+
+      // Remove form
+      formElement.remove();
+
       // Create temporary element to parse HTML
       const temp = document.createElement('div');
-      temp.innerHTML = cardHtml;
+      temp.innerHTML = html;
       const newCard = temp.firstElementChild;
-      
+
       // Insert at beginning of drop zone
-      dropZone.insertBefore(newCard, dropZone.firstChild);
-      
-      // Animate in
-      newCard.style.transform = 'translateY(-20px)';
-      newCard.style.opacity = '0';
-      setTimeout(() => {
-        newCard.style.transform = 'translateY(0)';
-        newCard.style.opacity = '1';
-      }, 50);
-      
-      // Immediately enter edit mode
-      setTimeout(() => editCard(newCard), 100);
-      
-      // Update card count
+      column.insertBefore(newCard, column.firstChild);
+
+      // Add checklist items if any exist
+      if (checklistItems.length > 0) {
+        const cardId = newCard.dataset.card;
+        for (const itemText of checklistItems) {
+          try {
+            await fetch(`/checklist/${cardId}`, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+              body: `text=${encodeURIComponent(itemText)}`
+            });
+          } catch (error) {
+            console.error('Error adding checklist item:', error);
+          }
+        }
+        // Refresh the card to show checklist
+        location.reload();
+      } else {
+        // Animate in
+        newCard.style.transform = 'translateY(-20px)';
+        newCard.style.opacity = '0';
+        setTimeout(() => {
+          newCard.style.transform = 'translateY(0)';
+          newCard.style.opacity = '1';
+        }, 50);
+      }
+
+      showToast('Card added successfully!', 'success');
       updateCardCount(columnId);
+    } else {
+      showToast('Error adding card', 'error');
     }
   } catch (error) {
     console.error('Error adding card:', error);
+    showToast('Error adding card', 'error');
   }
+}
+
+function cancelNewCard() {
+  const form = document.querySelector('.new-card-form');
+  if (form) {
+    form.remove();
+  }
+}
+
+function addNewChecklistItem(event, input) {
+  event.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+
+  const ul = input.parentElement.querySelector('.new-checklist-items');
+  const li = document.createElement('li');
+  li.className = 'new-checklist-item';
+  li.innerHTML = `
+    <span class="checklist-text">${text}</span>
+    <button type="button" onclick="removeNewChecklistItem(this)" class="remove-item">×</button>
+  `;
+
+  ul.appendChild(li);
+  input.value = '';
+}
+
+function removeNewChecklistItem(button) {
+  button.parentElement.remove();
 }
 
 // Edit Card Function
@@ -143,7 +243,6 @@ function editCard(cardElement) {
   actionDiv.innerHTML = `
     <button type="button" class="save-btn" onclick="saveCard(currentlyEditing)">Save</button>
     <button type="button" class="cancel-btn" onclick="cancelEdit(currentlyEditing)">Cancel</button>
-    <span class="edit-hint">Enter to save • Escape to cancel</span>
   `;
 
   // Replace elements

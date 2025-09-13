@@ -23,8 +23,8 @@
     </div>
   {% endif %}
   
-  <div class="card-actions" style="display: none;">
-    <button class="quick-action" onclick="quickDelete({{ card.id }})" title="Delete">×</button>
+  <div class="card-actions">
+    <button class="quick-action delete-btn" onclick="quickDelete({{ card.id }})" title="Delete card">🗑</button>
     <select class="quick-move" onchange="quickMove({{ card.id }}, this.value)" title="Move to...">
       <option value="">Move to...</option>
       <option value="1" {{ 'selected' if card.column_id == 1 else '' }}>Todo</option>

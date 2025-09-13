@@ -2,7 +2,6 @@
 {% block content %}
 <div class="row" style="margin-bottom:10px">
   <h2 style="margin:0">{{ board.name }}</h2>
-  <a class="badge" href="/seed">Seed demo</a>
   <div class="global-stats">
     <span class="stat">Total: {{ board.columns|map(attribute='cards')|map('length')|sum }}</span>
   </div>

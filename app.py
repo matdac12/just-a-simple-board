@@ -58,13 +58,6 @@ def home(request: Request, db: Session = Depends(get_db)):
         import traceback
         return HTMLResponse(content=f"<pre>Error: {str(e)}\n\n{traceback.format_exc()}</pre>", status_code=500)
 
-@app.get("/seed")
-def seed(db: Session = Depends(get_db)):
-    board = ensure_seed(db)
-    if not board.columns[0].cards:
-        c = Card(column_id=board.columns[0].id, title="Sample card", notes="Welcome!", position=0)
-        db.add(c); db.commit()
-    return HTMLResponse('<meta http-equiv="refresh" content="0; url=/">')
 
 @app.post("/cards", response_class=HTMLResponse)
 def create_card(

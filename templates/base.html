@@ -53,6 +53,7 @@
     .badge.due-soon{background:#f0fff4;color:#38a169}
     
     .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .card.editing .card-header{margin-top:32px}
     .card-notes{margin-bottom:8px}
     
     .checklist-summary{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
@@ -103,10 +104,9 @@
     }
 
     /* Edit Actions */
-    .edit-actions{margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .edit-actions{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .save-btn{background:#28a745;color:#fff;border:none;padding:4px 12px;border-radius:4px;font-size:12px;cursor:pointer}
     .cancel-btn{background:#6c757d;color:#fff;border:none;padding:4px 12px;border-radius:4px;font-size:12px;cursor:pointer}
-    .edit-hint{font-size:10px;color:#999;font-style:italic}
     .save-btn:hover{background:#218838}
     .cancel-btn:hover{background:#5a6268}
 
@@ -137,15 +137,92 @@
     .stat{font-size:12px;color:#666;margin-left:12px}
 
     /* Card improvements */
-    .card-title-input{font-size:14px;margin-bottom:4px;border:1px solid #007bff}
+    .card-title-input{
+      font-size:14px;margin-bottom:8px;padding:8px 12px;
+      border:1px solid #007bff;border-radius:6px;width:100%;
+      box-sizing:border-box;
+    }
     .card-notes-input{
-      resize:vertical;min-height:40px;font-family:inherit;line-height:1.4;
-      border:1px solid #ddd;border-radius:4px;padding:6px 8px;
+      resize:vertical;min-height:60px;font-family:inherit;line-height:1.4;
+      border:1px solid #ddd;border-radius:6px;padding:8px 12px;
+      width:100%;box-sizing:border-box;margin-bottom:8px;
     }
     .card-notes-input:focus{border-color:#007bff;box-shadow:0 0 0 2px #007bff20}
+    .card-title-input:focus{border-color:#007bff;box-shadow:0 0 0 2px #007bff20}
+
+    /* Prevent text overflow in cards */
+    .card{
+      word-wrap:break-word;overflow-wrap:break-word;
+    }
+    .card-notes{
+      word-wrap:break-word;overflow-wrap:break-word;
+    }
+
+    /* New card form styling */
+    .new-card-form{
+      background:#f8f9fa;border:2px dashed #007bff;border-radius:8px;
+      margin:8px 12px;padding:12px;animation:slideIn 0.3s ease;
+    }
+    .new-card-form-content{
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .new-card-title{
+      font-size:14px;padding:8px 12px;border:1px solid #ddd;
+      border-radius:6px;width:100%;box-sizing:border-box;
+    }
+    .new-card-title::placeholder{
+      color:#999;font-style:italic;
+    }
+    .new-card-notes{
+      font-size:12px;padding:8px 12px;border:1px solid #ddd;
+      border-radius:6px;width:100%;box-sizing:border-box;resize:vertical;
+      font-family:inherit;line-height:1.4;
+    }
+    .new-card-notes::placeholder{
+      color:#999;font-style:italic;
+    }
+    .new-card-checklist{
+      border:1px dashed #ddd;border-radius:6px;padding:8px;
+    }
+    .new-checklist-input{
+      font-size:12px;padding:6px 8px;border:1px solid #ddd;
+      border-radius:4px;width:100%;box-sizing:border-box;margin-bottom:8px;
+    }
+    .new-checklist-input::placeholder{
+      color:#999;font-style:italic;
+    }
+    .new-checklist-items{
+      list-style:none;margin:0;padding:0;
+    }
+    .new-checklist-item{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:4px 0;font-size:12px;
+    }
+    .remove-item{
+      background:none;border:none;color:#dc3545;cursor:pointer;
+      font-size:14px;font-weight:bold;padding:0 4px;
+    }
+    .remove-item:hover{
+      background:#dc3545;color:#fff;border-radius:3px;
+    }
+    .new-card-due{
+      font-size:12px;padding:6px 8px;border:1px solid #ddd;
+      border-radius:6px;width:100%;box-sizing:border-box;
+    }
+    .new-card-actions{
+      display:flex;gap:8px;margin-top:4px;
+    }
+    .new-card-title:focus, .new-card-notes:focus, .new-card-due:focus{
+      outline:none;border-color:#007bff;box-shadow:0 0 0 2px #007bff20;
+    }
+
+    @keyframes slideIn{
+      from{transform:translateY(-10px);opacity:0;}
+      to{transform:translateY(0);opacity:1;}
+    }
   </style>
   <script src="https://unpkg.com/htmx.org@2.0.2"></script>
-  <script defer src="/static/dnd.js"></script>
+  <script defer src="/static/dnd.js?v=3"></script>
 </head>
 <body>
   {% block content %}{% endblock %}
